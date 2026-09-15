@@ -427,8 +427,8 @@ class WideFix:
                 # Change format without changing data values => shift
                 temp_fmt = FixFormat.for_shift(self._fmt, s)
                 temp = WideFix(self._data[i], temp_fmt, copy=False)
-                # Resize to the shared intermediate format
-                mid._data[i] = temp.resize(mid_fmt)._data[0]
+                # Resize to the shared intermediate format (temp holds a single 0d value)
+                mid._data[i] = temp.resize(mid_fmt)._data.flat[0]
         
         return mid.resize(r_fmt, rnd, sat)
     

@@ -639,6 +639,25 @@ class cl_fix_shift_right_Test(unittest.TestCase):
                          -3,
                          FixFormat(True, 5, 5), FixRound.Trunc_s, FixSaturate.None_s))
 
+### cl_fix_shift (variable) ###
+class cl_fix_shift_variable_Test(unittest.TestCase):
+
+    def check_variable_shift(self, a_fmt, r_fmt, shift):
+        a = cl_fix_random(len(shift), a_fmt)
+        result = cl_fix_shift(a, a_fmt, shift, r_fmt, FixRound.Trunc_s, FixSaturate.None_s)
+        for i, s in enumerate(shift):
+            expected = cl_fix_shift(a[i:i+1], a_fmt, int(s), r_fmt, FixRound.Trunc_s, FixSaturate.None_s)
+            self.assertEqual(expected[0], result[i])
+
+    def test_Narrow(self):
+        self.check_variable_shift(FixFormat(False, 1, 15), FixFormat(False, 1, 15), np.arange(-4, 12))
+
+    def test_NarrowToWideIntermediate(self):
+        self.check_variable_shift(FixFormat(False, 1, 39), FixFormat(False, 1, 39), np.arange(0, 40))
+
+    def test_Wide(self):
+        self.check_variable_shift(FixFormat(True, 30, 40), FixFormat(True, 30, 40), np.arange(-20, 20))
+
 
 ### cl_fix_max_value ###
 class cl_fix_max_value_Test(unittest.TestCase):
